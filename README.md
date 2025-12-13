@@ -1,4 +1,4 @@
-#Recursive geometric fractals
+# Recursive geometric fractals
 
 Interactive visualization of **recursive geometric fractals** using **p5.js** and **Chart.js**. 
 This project allows to explore, manipulate, and export classic fractals with customizable parameters.
