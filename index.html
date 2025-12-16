@@ -6,23 +6,21 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description"
 		content="Візуалізація рекурсивних фракталів за допомогою JavaScript та p5.js. Графіки складності та експорт у PNG/PDF.">
-
 	<script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
 	<script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 	<script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-
-	<title>Візуалізація рекурсивних фракталів</title>
 	<link rel="stylesheet" href="styles/style.css">
+	<title>Візуалізація рекурсивних фракталів</title>
 </head>
 
 <body>
 	<header class="app-header">
 		<h1>Рекурсивні графічні фрактали</h1>
 	</header>
-
 	<main class="layout">
-		<aside class="controls" aria-label="Панель керування параметрами фракталів">
+		<aside class="controls" aria-labelledby="controlsTitle">
+			<h2 id="controlsTitle" class="visually-hidden">Керування параметрами фракталів</h2>
 			<section class="control-group">
 				<h2>Вибір фрактала</h2>
 				<label for="fractalSelect">Тип фрактала</label>
@@ -36,14 +34,15 @@
 
 			<section class="control-group" id="parameters">
 				<h2>Параметри</h2>
+				<label class="label" for="depthRange">Глибина рекурсії /label>
+					<input type="range" id="depthRange" min="0" max="10" value="0">
+					<output id="depthValue" for="depthRange" aria-live="polite">0</output>
+				</label>
 
-				<label class="label" for="depthRange"> Глибина рекурсії </label>
-				<input type="range" id="depthRange" min="0" max="10" value="1">
-				<output id="depthValue" for="depthRange">1</output>
-
-				<label class="label" for="zoomRange"> Масштаб (зум) </label>
-				<input type="range" id="zoomRange" min="0.5" max="3" step="0.1" value="1">
-				<output id="zoomValue" for="zoomRange">1</output>
+				<label class="label" for="zoomRange">Масштаб (зум)
+					<input type="range" id="zoomRange" min="0.5" max="3" step="0.1" value="0">
+					<output id="zoomValue" for="zoomRange">0</output>
+				</label>
 			</section>
 
 			<section class="info" id="fractalInfo" aria-live="polite">
@@ -54,41 +53,40 @@
 			<section class="status">
 				<h2>Стан візуалізації</h2>
 				<ul>
-					<li>Глибина рекурсії: <strong id="statusDepth">1</strong></li>
-					<li>Кількість елементів: <strong id="statusCount">0</strong></li>
+					<li>Глибина рекурсії: <strong id="statusDepth">0</strong></li>
+					<li>Кількість елементів: <strong id="statusCount">1</strong></li>
 					<li>Час рендерингу: <strong id="statusTime">0</strong> ms</li>
 				</ul>
 			</section>
 
 			<section class="control-group">
 				<h2>Експорт результатів</h2>
-				<button id="exportPNG" aria-label="Експортувати зображення у форматі PNG">
-					Експорт PNG-файлів
-				</button>
-				<button id="exportPDF" aria-label="Експортувати документ у форматі PDF">
-					Експорт PDF-файлу
-				</button>
+				<button id="exportPNG" aria-label="Експортувати зображення у форматі PNG">Експорт PNG-файлів</button>
+				<button id="exportPDF" aria-label="Експортувати документ у форматі PDF">Експорт PDF-файлу</button>
 			</section>
 
+			<!-- Анімація -->
 			<section class="control-group">
-				<button id="animate" aria-label="Запустити анімацію побудови фрактала">
-					Анімація побудови
-				</button>
+				<button id="animate" aria-label="Запустити анімацію побудови фрактала">Анімація побудови</button>
 			</section>
 		</aside>
 
-		<section class="viewer" aria-label="Область візуалізації фрактала">
+		<section class="viewer">
 			<h2 id="fractalTitle"></h2>
-			<div id="canvasContainer" role="img" aria-label="Canvas з візуалізацією фрактала"></div>
-		</section>
+			<p id="stats" aria-live="polite"></p>
+			<div id="canvasContainer" aria-labelledby="fractalTitle"></div>
 
-		<aside class="analytics" aria-label="Аналітика складності">
-			<section>
-				<h2>Залежність складності від глибини</h2>
-				<canvas id="complexityChart"></canvas>
+			<section class="complexity" aria-label="Аналітика складності">
+				<header class="complexity-header">
+					<h3>Залежність складності від глибини</h3>
+				</header>
+				<p id="complexityDesc" class="complexity-description">Графік показує залежність кількості рекурсивних елементів
+					від глибини рекурсії для вибраного фрактала.</p>
+				<div class="complexity-chart">
+					<canvas id="complexityChart" aria-describedby="complexityDesc"></canvas>
+				</div>
 			</section>
-		</aside>
-
+		</section>
 	</main>
 
 	<footer class="app-footer">
